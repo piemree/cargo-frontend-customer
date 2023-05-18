@@ -20,8 +20,8 @@ import jwt_decode from 'jwt-decode';
 import request from 'src/request';
 
 const Login = () => {
-  const [email, setEmail] = useState('xpokales@gmail.com');
-  const [password, setPassword] = useState('admin123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const global = useGlobals();
   const navigate = useNavigate();
 
