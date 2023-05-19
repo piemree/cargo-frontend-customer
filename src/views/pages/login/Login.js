@@ -40,6 +40,7 @@ const Login = () => {
       }
     } catch (error) {
       global.setUser(null);
+      alert('Giriş başarısız oldu.');
       console.log(error);
     }
   }

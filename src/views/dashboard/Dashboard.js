@@ -138,7 +138,7 @@ const Dashboard = () => {
     request
       .get('/cargo/getMySendedCargos')
       .then((response) => {
-        setCargos(response.data);
+        setCargos(response.data?.data);
       })
       .catch((error) => {
         console.log(error.response?.data?.error?.message);
@@ -164,16 +164,16 @@ const Dashboard = () => {
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                  {cargos.map((item, index) => (
+                  {cargos?.map((item, index) => (
                     <CTableRow v-for="item in tableItems" key={index}>
                       <CTableDataCell>
                         <div>
-                          {item.sender.name} {item.sender.surname}
+                          {item.sender?.name} {item.sender?.surname}
                         </div>
                       </CTableDataCell>
                       <CTableDataCell>
                         <div>
-                          {item.receiver.name} {item.receiver.surname}
+                          {item.receiver?.name} {item.receiver?.surname}
                         </div>
                       </CTableDataCell>
                       <CTableDataCell>
