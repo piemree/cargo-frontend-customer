@@ -25,7 +25,8 @@ const Login = () => {
   const global = useGlobals();
   const navigate = useNavigate();
 
-  async function handleLogin() {
+  async function handleLogin(e) {
+    e.preventDefault();
     try {
       const result = await request.post('/auth/customer/login', {
         email,
@@ -52,11 +53,8 @@ const Login = () => {
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                  <CForm>
-                    <h1>Login</h1>
-                    <p className="text-medium-emphasis">
-                      Sign In to your account
-                    </p>
+                  <CForm onSubmit={handleLogin}>
+                    <h2 className="mb-4">Giriş Yap</h2>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
@@ -73,54 +71,36 @@ const Login = () => {
                       </CInputGroupText>
                       <CFormInput
                         type="password"
-                        placeholder="Password"
+                        placeholder="Şifre"
                         autoComplete="current-password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                       />
                     </CInputGroup>
                     <CRow>
-                      <CCol xs={6}>
-                        <CButton
-                          color="primary"
-                          className="px-4"
-                          onClick={handleLogin}
-                        >
-                          Login
+                      <CCol xs={3}>
+                        <CButton type="submit" color="primary" className="px-4">
+                          Giriş
                         </CButton>
                       </CCol>
-                      <CCol xs={6} className="text-right">
-                        <CButton color="link" className="px-0">
-                          Forgot password?
-                        </CButton>
+                      <CCol xs={9} className="d-flex justify-content-end">
+                        <Link
+                          color="link"
+                          className="px-0 mx-2"
+                          target='_blank'
+                          to={
+                            process.env.REACT_APP_API_URL +
+                            '/api/auth/customerForgotPassword'
+                          }
+                        >
+                          Şifremi Unuttum
+                        </Link>
+                        <Link color="link" className="px-0" to="/register">
+                          Kayıt Ol
+                        </Link>
                       </CCol>
                     </CRow>
                   </CForm>
-                </CCardBody>
-              </CCard>
-              <CCard
-                className="text-white bg-primary py-5"
-                style={{ width: '44%' }}
-              >
-                <CCardBody className="text-center">
-                  <div>
-                    <h2>Sign up</h2>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua.
-                    </p>
-                    <Link to="/register">
-                      <CButton
-                        color="primary"
-                        className="mt-3"
-                        active
-                        tabIndex={-1}
-                      >
-                        Register Now!
-                      </CButton>
-                    </Link>
-                  </div>
                 </CCardBody>
               </CCard>
             </CCardGroup>

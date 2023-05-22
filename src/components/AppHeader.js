@@ -2,21 +2,28 @@ import React from 'react';
 import {
   CContainer,
   CHeader,
-  CHeaderBrand,
   CHeaderNav,
   CHeaderToggler,
-  CNavLink,
-  CNavItem,
+  CButton,
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
-import { cilBell, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons';
+import { cilExitToApp, cilMenu } from '@coreui/icons';
 
-import { AppHeaderDropdown } from './header/index';
-import { logo } from 'src/assets/brand/logo';
 import { useGlobals } from 'src/hooks/useGlobals';
+import { useNavigate } from 'react-router-dom';
 
 const AppHeader = () => {
   const globals = useGlobals();
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    try {
+      localStorage.removeItem('token');
+      globals.setUser(null);
+      navigate('/login');
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <CHeader position="sticky" className="mb-4">
       <CContainer fluid>
@@ -26,29 +33,18 @@ const AppHeader = () => {
         >
           <CIcon icon={cilMenu} size="lg" />
         </CHeaderToggler>
-        <CHeaderBrand className="mx-auto d-md-none" to="/">
-          <CIcon icon={logo} height={48} alt="Logo" />
-        </CHeaderBrand>
-        <CHeaderNav className="d-none d-md-flex me-auto"></CHeaderNav>
-        <CHeaderNav>
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilBell} size="lg" />
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilList} size="lg" />
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilEnvelopeOpen} size="lg" />
-            </CNavLink>
-          </CNavItem>
-        </CHeaderNav>
+
         <CHeaderNav className="ms-3">
-          <AppHeaderDropdown />
+          <div className="d-flex align-items-center">
+            <div className="me-2"> {globals?.user?.name}</div>
+          </div>
+          <CButton
+            onClick={handleLogout}
+            color="white"
+            className="outline-none border-0"
+          >
+            <CIcon icon={cilExitToApp} className="me-2" />
+          </CButton>
         </CHeaderNav>
       </CContainer>
     </CHeader>

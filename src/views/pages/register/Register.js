@@ -13,7 +13,7 @@ import {
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { cilLockLocked, cilUser, cilPhone } from '@coreui/icons';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import request from 'src/request';
 
 const Register = () => {
@@ -26,12 +26,10 @@ const Register = () => {
     password: '',
   });
   const [password2, setPassword2] = useState('');
-  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const onFormSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     try {
       const result = await request.post('/auth/customer/register', state);
       if (result.data.success) {
@@ -39,9 +37,8 @@ const Register = () => {
         navigate('/login');
       }
     } catch (error) {
-      alert(error.response?.data?.error?.message);
+      alert('Kayıt Başarısız');
       console.log(error);
-      setError(error.response?.data?.error?.message);
     }
   };
 
@@ -53,8 +50,7 @@ const Register = () => {
             <CCard className="mx-4">
               <CCardBody className="p-4">
                 <CForm onSubmit={onFormSubmit}>
-                  <h1>Register</h1>
-                  <p className="text-medium-emphasis">Create your account</p>
+                  <h2 className="mb-4">Kayıt Ol</h2>
                   <CInputGroup className="mb-3">
                     <CFormInput
                       placeholder="Ad"
@@ -120,7 +116,8 @@ const Register = () => {
                       placeholder="Password"
                       autoComplete="new-password"
                       valid={
-                        state.password.length > 6 && state.password.length < 16
+                        state.password.length >= 6 &&
+                        state.password.length <= 16
                       }
                       value={state.password}
                       onChange={(e) =>
@@ -136,16 +133,27 @@ const Register = () => {
                       type="password"
                       placeholder="Repeat password"
                       autoComplete="new-password"
-                      valid={state.password === password2}
+                      valid={
+                        state.password === password2 &&
+                        password2.length >= 6 &&
+                        password2.length <= 16
+                      }
                       value={password2}
                       onChange={(e) => setPassword2(e.target.value)}
                     />
                   </CInputGroup>
-                  <div className="d-grid">
-                    <CButton type="submit" color="success">
-                      Create Account
-                    </CButton>
-                  </div>
+                  <CRow>
+                    <CCol xs={6}>
+                      <CButton type="submit" color="primary" className="px-4">
+                        Kayıt
+                      </CButton>
+                    </CCol>
+                    <CCol className="d-flex justify-content-end">
+                      <Link color="link" className="px-0" to="/login">
+                        Giriş Yap
+                      </Link>
+                    </CCol>
+                  </CRow>
                 </CForm>
               </CCardBody>
             </CCard>
