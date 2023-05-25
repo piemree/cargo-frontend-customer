@@ -42,103 +42,22 @@ import request from 'src/request';
 
 const Dashboard = () => {
   const [cargos, setCargos] = useState([]);
-
-  const tableExample = [
-    {
-      avatar: { src: avatar1, status: 'success' },
-      user: {
-        name: 'Yiorgos Avraamu',
-        new: true,
-        registered: 'Jan 1, 2021',
-      },
-      country: { name: 'USA', flag: cifUs },
-      usage: {
-        value: 50,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'success',
-      },
-      payment: { name: 'Mastercard', icon: cibCcMastercard },
-      activity: '10 sec ago',
-    },
-    {
-      avatar: { src: avatar2, status: 'danger' },
-      user: {
-        name: 'Avram Tarasios',
-        new: false,
-        registered: 'Jan 1, 2021',
-      },
-      country: { name: 'Brazil', flag: cifBr },
-      usage: {
-        value: 22,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'info',
-      },
-      payment: { name: 'Visa', icon: cibCcVisa },
-      activity: '5 minutes ago',
-    },
-    {
-      avatar: { src: avatar3, status: 'warning' },
-      user: { name: 'Quintin Ed', new: true, registered: 'Jan 1, 2021' },
-      country: { name: 'India', flag: cifIn },
-      usage: {
-        value: 74,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'warning',
-      },
-      payment: { name: 'Stripe', icon: cibCcStripe },
-      activity: '1 hour ago',
-    },
-    {
-      avatar: { src: avatar4, status: 'secondary' },
-      user: { name: 'Enéas Kwadwo', new: true, registered: 'Jan 1, 2021' },
-      country: { name: 'France', flag: cifFr },
-      usage: {
-        value: 98,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'danger',
-      },
-      payment: { name: 'PayPal', icon: cibCcPaypal },
-      activity: 'Last month',
-    },
-    {
-      avatar: { src: avatar5, status: 'success' },
-      user: {
-        name: 'Agapetus Tadeáš',
-        new: true,
-        registered: 'Jan 1, 2021',
-      },
-      country: { name: 'Spain', flag: cifEs },
-      usage: {
-        value: 22,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'primary',
-      },
-      payment: { name: 'Google Wallet', icon: cibCcApplePay },
-      activity: 'Last week',
-    },
-    {
-      avatar: { src: avatar6, status: 'danger' },
-      user: {
-        name: 'Friderik Dávid',
-        new: true,
-        registered: 'Jan 1, 2021',
-      },
-      country: { name: 'Poland', flag: cifPl },
-      usage: {
-        value: 43,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'success',
-      },
-      payment: { name: 'Amex', icon: cibCcAmex },
-      activity: 'Last week',
-    },
-  ];
+  const [recievedCargos, setRecievedCargos] = useState([]);
 
   useEffect(() => {
     request
       .get('/cargo/getMySendedCargos')
       .then((response) => {
         setCargos(response.data?.data);
+      })
+      .catch((error) => {
+        console.log(error.response?.data?.error?.message);
+      });
+
+    request
+      .get('/cargo/getMyRecievedCargos')
+      .then((response) => {
+        setRecievedCargos(response.data?.data);
       })
       .catch((error) => {
         console.log(error.response?.data?.error?.message);
@@ -155,8 +74,8 @@ const Dashboard = () => {
               <CTable align="middle" className="mb-0 border" hover responsive>
                 <CTableHead color="light">
                   <CTableRow>
-                    <CTableHeaderCell>Gönderici</CTableHeaderCell>
                     <CTableHeaderCell>Alıcı</CTableHeaderCell>
+                    <CTableHeaderCell>İçerik</CTableHeaderCell>
                     <CTableHeaderCell>Kayıt Şube</CTableHeaderCell>
                     <CTableHeaderCell>Varış Şube</CTableHeaderCell>
                     <CTableHeaderCell>Durum</CTableHeaderCell>
@@ -173,7 +92,54 @@ const Dashboard = () => {
                       </CTableDataCell>
                       <CTableDataCell>
                         <div>
-                          {item.receiver?.name} {item.receiver?.surname}
+                          {item.content}
+                        </div>
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        <div>{item.registerBranch.name}</div>
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        <div>{item.targetBranch.name}</div>
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        <div>{item.status}</div>
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        <div>{item.totalPrice} TL</div>
+                      </CTableDataCell>
+                    </CTableRow>
+                  ))}
+                </CTableBody>
+              </CTable>
+            </CCardBody>
+          </CCard>
+          <CCard className="mb-4">
+            <CCardHeader>
+              Bana Gelen & Gelecek Kargolar
+            </CCardHeader>
+            <CCardBody>
+              <CTable align="middle" className="mb-0 border" hover responsive>
+                <CTableHead color="light">
+                  <CTableRow>
+                    <CTableHeaderCell>Gönderici</CTableHeaderCell>
+                    <CTableHeaderCell>İçerik</CTableHeaderCell>
+                    <CTableHeaderCell>Kayıt Şube</CTableHeaderCell>
+                    <CTableHeaderCell>Varış Şube</CTableHeaderCell>
+                    <CTableHeaderCell>Durum</CTableHeaderCell>
+                    <CTableHeaderCell>Gönderi Ücreti</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  {recievedCargos?.map((item, index) => (
+                    <CTableRow key={index}>
+                      <CTableDataCell>
+                        <div>
+                          {item.sender?.name} {item.sender?.surname}
+                        </div>
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        <div>
+                          {item.content}
                         </div>
                       </CTableDataCell>
                       <CTableDataCell>

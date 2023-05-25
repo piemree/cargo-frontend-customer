@@ -20,7 +20,7 @@ import jwt_decode from 'jwt-decode';
 import request from 'src/request';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const global = useGlobals();
   const navigate = useNavigate();
@@ -29,7 +29,8 @@ const Login = () => {
     e.preventDefault();
     try {
       const result = await request.post('/auth/customer/login', {
-        email,
+        email: username,
+        tcNo: username,
         password,
       });
       if (result.data.success) {
@@ -60,9 +61,9 @@ const Login = () => {
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
                       <CFormInput
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Email veya TC Kimlik No"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                       />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
@@ -87,7 +88,7 @@ const Login = () => {
                         <Link
                           color="link"
                           className="px-0 mx-2"
-                          target='_blank'
+                          target="_blank"
                           to={
                             process.env.REACT_APP_API_URL +
                             '/api/auth/customerForgotPassword'
