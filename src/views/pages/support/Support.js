@@ -167,6 +167,7 @@ const Support = () => {
                   <CTableRow>
                     <CTableHeaderCell>Başlık</CTableHeaderCell>
                     <CTableHeaderCell>Konu</CTableHeaderCell>
+                    <CTableHeaderCell>Kimden</CTableHeaderCell>
                     <CTableHeaderCell>Durum</CTableHeaderCell>
                     <CTableHeaderCell
                       style={{ width: '200px' }}
@@ -183,7 +184,12 @@ const Support = () => {
                         <div>{item.subject}</div>
                       </CTableDataCell>
                       <CTableDataCell>
-                        <div>{item.status}</div>
+                        <div>
+                          {item?.sender === 'customer' ? 'Müşteri' : 'Personel'}
+                        </div>
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        <div>{item.status == 'open' ? 'Açık' : 'Kapalı'}</div>
                       </CTableDataCell>
                       <CTableDataCell>
                         <CButton
